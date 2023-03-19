@@ -7,6 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/zhangchen21/datagrab.js"
+  },
   "keywords": [
     "javascript",
     "data",
