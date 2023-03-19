@@ -4,7 +4,8 @@
   "description": "DataGrab is a js library to generate data from image, which can help you to get data from a paper/img/screenshot etc. We provide two ways to use this: npm package or a html.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack"
   },
   "keywords": [
     "javascript",
@@ -13,5 +14,10 @@
     "canvas"
   ],
   "author": "Chen Zhang",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "lodash": "^4.17.21",
+    "webpack": "^5.76.2",
+    "webpack-cli": "^5.0.1"
+  }
 }

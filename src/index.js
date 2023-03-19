@@ -45,7 +45,7 @@ const initImg = (img) => {
 	};
 }
 
-const generateData = (imgNode, xStart, xEnd, yStart, yEnd) => {
+export const generateData = (imgNode, xStart, xEnd, yStart, yEnd) => {
 	const canvas = initImg(imgNode);
 	const resData = {
 		"rgb(255,255,255)": [],
