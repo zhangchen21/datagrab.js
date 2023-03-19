@@ -79,7 +79,7 @@ export const generateData = (imgNode, xStart, xEnd, yStart, yEnd) => {
 	}
 
 	delete (resData["rgb(255,255,255)"]);
-	delete (resData["rgb(50,50,50)"]);
+	// delete (resData["rgb(50,50,50)"]);
 
 	return resData;
 }
