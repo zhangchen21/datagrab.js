@@ -22,7 +22,7 @@ DataGrab 是一个从图像中生成数据的 js 库，它可以帮助您从 学
 
 <img src="https://github.com/zhangchen21/datagrab.js/blob/master/assets/originalImg.png" height="240px" width="360px" />
 
-我们需要输入:横坐标开始0，终止57；纵坐标开始-20，终止50; 图片模糊度（默认100，图片很糊的话适量调低，反之可以调高以提高精度）; 数据点密集度（默认3，数据点很多可以适量调低），设置好以后点击 DETECT 即可获取读取到的数据：
+我们需要输入:横坐标开始0，终止57；纵坐标开始-20，终止50; 图片模糊度（默认100，决定两个颜色是否合并的阈值）; 数据点密集度（默认3，想要获取更多的数据点可以调低），设置好以后点击 DETECT 即可获取读取到的数据：
 
 <img src="https://github.com/zhangchen21/datagrab.js/blob/master/assets/html.png" height="240px" width="360px" />
 
