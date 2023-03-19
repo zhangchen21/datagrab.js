@@ -38,9 +38,9 @@
         overflow: hidden;
         position: relative;
         border: 2px solid #2c3e50;
-        background-color: white;
-        color: #2c3e50;
+        background-color: #2c3e50;
         transition: background-color .2s;
+        color: white;
     }
     .twinkle::before {
         content: "";
@@ -52,7 +52,6 @@
     }
     .twinkle:hover {
         background-color: #2c3e50;
-        color: white;
     }
     .twinkle:hover::before {
         transition: ease-in-out .5s;
@@ -77,6 +76,8 @@
     <div>x end coordinate:   <input id="xEnd" class="input" /></div>
     <div>y start coordinate: <input id="yStart" class="input" /></div>
     <div>y end coordinate:   <input id="yEnd" class="input" /></div> 
+    <div>color confusion(If image is blurred, increase this): <input id="N" class="input" value="100"/></div>
+    <div>granularity(If dots are dense, decrease this): <input id="Granularity" class="input" value="3"/></div>
     
     <button id="btn" class="twinkle" type="submit">DETECT</button>
   </div>
@@ -86,9 +87,6 @@
   </div>
 
   <script>
-    const N = 130;
-    const Granularity = 3;
-
     const getInputValue = (elementID) => {
       let value = document.getElementById(elementID).value;
       if(value === '') {
@@ -99,7 +97,7 @@
 
     const getRGBfromString = (String) => String.match(/rgb\((?<r>.*?),(?<g>.*?),(?<b>.*?)\)/).groups;
 
-    const colorsCanBeSame = (colorA, colorB) => {
+    const colorsCanBeSame = (colorA, colorB, N) => {
       let { r, g, b } = getRGBfromString(colorA);
       let { r: r1, g: g1, b: b1 } = getRGBfromString(colorB);  
 
@@ -162,12 +160,13 @@
       const img = document.getElementById('img');
       const output = document.getElementById('output');
       const canvas = initImg(img);
-      const resData = {
-        "rgb(255,255,255)": [],
-        "rgb(50,50,50)": [],
-      };
 
       document.getElementById('btn').addEventListener('click', () => {
+        output.innerHTML = "";
+        const resData = {
+          "rgb(255,255,255)": [],
+          "rgb(50,50,50)": [],
+        };
 
         try {
           const [ xStart, xEnd, yStart, yEnd ] = [
@@ -177,6 +176,9 @@
             getInputValue('yStart'),
             getInputValue('yEnd')
           ];
+          const N = Number(document.getElementById("N").value);
+          const Granularity = Number(document.getElementById("Granularity").value);
+          console.log(N, Granularity)
           
           for(let j = 0; j < canvas.height ; j += Granularity) {
             for(let i = 0; i < canvas.width ; i += Granularity) {
@@ -192,7 +194,7 @@
 
               let sameFlag = false;
               for(var n = 0; n < keys.length; n++) {
-                if(colorsCanBeSame(keys[n], color)) {
+                if(colorsCanBeSame(keys[n], color, N)) {
                   resData[`${keys[n]}`].push(cooratt);
                   sameFlag = true;
                   break;
@@ -207,11 +209,8 @@
           delete(resData["rgb(255,255,255)"]);
           // delete(resData["rgb(50,50,50)"])
           Object.entries(resData).forEach(kv => {
-            output.appendChild(generateColorResult(kv[0], kv[1]));
+            kv[1].length && output.appendChild(generateColorResult(kv[0], kv[1]));
           })
-
-          console.log(resData);
-
         } catch(e) {
           window.alert(e);
         }

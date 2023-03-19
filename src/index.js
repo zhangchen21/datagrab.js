@@ -1,16 +1,14 @@
-const N = 130;
-const Granularity = 3;
 
 const getRGBfromString = (String) => String.match(/rgb\((?<r>.*?),(?<g>.*?),(?<b>.*?)\)/).groups;
 
-const colorsCanBeSame = (colorA, colorB) => {
+const colorsCanBeSame = (colorA, colorB, Ambiguity) => {
 	let { r, g, b } = getRGBfromString(colorA);
 	let { r: r1, g: g1, b: b1 } = getRGBfromString(colorB);
 
 	return (
-		Math.abs(Number(r) - Number(r1)) < N &&
-		Math.abs(Number(g) - Number(g1)) < N &&
-		Math.abs(Number(b) - Number(b1)) < N
+		Math.abs(Number(r) - Number(r1)) < Ambiguity &&
+		Math.abs(Number(g) - Number(g1)) < Ambiguity &&
+		Math.abs(Number(b) - Number(b1)) < Ambiguity
 	)
 }
 
@@ -45,7 +43,7 @@ const initImg = (img) => {
 	};
 }
 
-export const generateData = (imgNode, xStart, xEnd, yStart, yEnd) => {
+export const generateData = (imgNode, xStart, xEnd, yStart, yEnd, Ambiguity, Granularity) => {
 	const canvas = initImg(imgNode);
 	const resData = {
 		"rgb(255,255,255)": [],
@@ -66,7 +64,7 @@ export const generateData = (imgNode, xStart, xEnd, yStart, yEnd) => {
 
 			let sameFlag = false;
 			for (var n = 0; n < keys.length; n++) {
-				if (colorsCanBeSame(keys[n], color)) {
+				if (colorsCanBeSame(keys[n], color, Ambiguity)) {
 					resData[`${keys[n]}`].push(cooratt);
 					sameFlag = true;
 					break;
