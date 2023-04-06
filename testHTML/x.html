@@ -17,6 +17,11 @@
       align-items: flex-start;
       padding: 0 20px;
     }
+    #targetColors {
+			width: 100%;
+			height: 40px;
+			display: flex;
+    }
     .input {
       width: 100px;
       height: 30px;   
@@ -70,14 +75,22 @@
 </head>
 <body>
   <div class="left">
-    <img id="img" src="./2.png" alt="">
+    <img id="img" src="./屏幕截图 2023-04-06 162602.png" alt="">
 
-    <div>x start coordinate: <input id="xStart" class="input" /></div>
+    <br/>
+    <input 
+			type="color"
+			id="htmlColorEl"
+    >
+    <span> Press to get color</span>
+    <br/>
+    <div id="targetColors">Target Colors: </div>
+    <div>x start coordinate: <input id="xStart" class="input" value="0"/></div>
     <div>x end coordinate:   <input id="xEnd" class="input" /></div>
-    <div>y start coordinate: <input id="yStart" class="input" /></div>
+    <div>y start coordinate: <input id="yStart" class="input" value="0"/></div>
     <div>y end coordinate:   <input id="yEnd" class="input" /></div> 
-    <div>color confusion ( Value that determines whether different colors merge ): <input id="N" class="input" value="100"/></div>
-    <div>granularity (If dots are dense, decrease this): <input id="Granularity" class="input" value="3"/></div>
+    <div>color confusion ( Value that determines whether different colors merge ): <input id="N" class="input" value="5"/></div>
+    <div>granularity (If dots are dense, decrease this): <input id="Granularity" class="input" value="2"/></div>
     
     <button id="btn" class="twinkle" type="submit">DETECT</button>
   </div>
@@ -153,8 +166,45 @@
 
       docker.appendChild(key);
       docker.appendChild(value);
-      return docker;
+      return values.length ? docker : key;
     }
+
+    const conversion= function(value){
+			// Regex for color value
+			let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+			
+			let color = value.toLowerCase();
+			if (reg.test(color)) {
+				// #fff => #ffffff
+				if (color.length === 4) {
+				let colorNew = "#";
+					for (let i = 1; i < 4; i += 1) {
+						colorNew += color.slice(i, i + 1).concat(color.slice(i, i + 1));
+					}
+					color = colorNew;
+				}
+				// Convert color value to RGB
+				let colorChange = [];
+				for (let j = 1; j < 7; j += 2) {
+					colorChange.push(parseInt("0x" + color.slice(j, j + 2)));
+				}
+				return "rgb(" + colorChange.join(",") + ")";
+			} else {
+				return color;
+			}
+    }
+ 
+    const resData = {
+        "rgb(255,255,255)": [],
+        "rgb(50,50,50)": [],
+    };
+
+    document.getElementById("htmlColorEl").addEventListener("input",(e)=>{
+        var test = conversion(document.getElementById("htmlColorEl").value);
+
+        resData[`${test}`] = [];
+        document.getElementById('targetColors').appendChild(generateColorResult(test));
+    })
 
     window.addEventListener('load', () => {      
       const img = document.getElementById('img');
@@ -163,10 +213,6 @@
 
       document.getElementById('btn').addEventListener('click', () => {
         output.innerHTML = "";
-        const resData = {
-          "rgb(255,255,255)": [],
-          "rgb(50,50,50)": [],
-        };
 
         try {
           const [ xStart, xEnd, yStart, yEnd ] = [
@@ -185,8 +231,8 @@
 
               let color = canvas.getColor(i, j);
 
-              let xCooratt = Math.floor(i / canvas.width * (xEnd - xStart) + xStart);
-              let yCooratt = Math.floor((canvas.height - j) / canvas.height * (yEnd - yStart) + yStart);
+              let xCooratt = (i / canvas.width * (xEnd - xStart) + xStart).toFixed(2);
+              let yCooratt = ((canvas.height - j) / canvas.height * (yEnd - yStart) + yStart).toFixed(2);
               
               let cooratt = `[${xCooratt},${yCooratt}]`;
 
@@ -201,7 +247,7 @@
                 }
               }
               if(!sameFlag) {
-                resData[`${color}`] = [cooratt];
+                // resData[`${color}`] = [cooratt];
               }
             }
           }
